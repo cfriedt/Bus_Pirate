@@ -431,9 +431,25 @@ void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void) {
 
 extern BDentry *CDC_Outbdp, *CDC_Inbdp;
 
+/* interrupt transfer related stuff */
+unsigned char __attribute__((section(".bss.filereg"))) * UART1RXBuf;
+unsigned int __attribute__((section(".bss.filereg"))) UART1RXToRecv;
+unsigned int __attribute__((section(".bss.filereg"))) UART1RXRecvd;
+unsigned char __attribute__((section(".bss.filereg"))) * UART1TXBuf;
+unsigned int __attribute__((section(".bss.filereg"))) UART1TXSent;
+unsigned int __attribute__((section(".bss.filereg"))) UART1TXAvailable;
+
 void UART1TX(char c) {
     if (bpConfig.quiet) return;
     putc_cdc(c);
+}
+
+void UART1TXInt() {
+    int n = UART1TXAvailable - UART1TXSent;
+    int i;
+    for( i = 0; i < n; i++ ) {
+        UART1TX( UART1TXBuf[ i ] );
+    }
 }
 
 void UARTbuf(char c) {

@@ -71,6 +71,12 @@
 ;  w12 : delay loop
 ;
 
+	.extern _UART1RXRecvd
+	.extern _UART1TXAvailable
+	.extern _UART1TXSent
+	.extern _UART1TXBuf
+	.extern _UART1TXInt
+
 	.text
 	.global _binOpenOCDTapShiftFast
 
